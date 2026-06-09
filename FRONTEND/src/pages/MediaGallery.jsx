@@ -20,8 +20,8 @@ function MediaGallery() {
   console.log("Downloading:", url);
 
   const downloadUrl =
-    `http://localhost:2001/api/media/download?url=` +
-    encodeURIComponent(url);
+  `${import.meta.env.VITE_API_URL}/media/download?url=` +
+  encodeURIComponent(url);
 
   window.location.href = downloadUrl;
 };

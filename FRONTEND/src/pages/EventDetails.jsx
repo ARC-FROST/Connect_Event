@@ -123,7 +123,7 @@ const handleDownload = async (url) => {
   const link = document.createElement("a");
 
   link.href =
-    `http://localhost:2001/api/media/download/${mediaId}`;
+    `${import.meta.env.VITE_API_URL}/media/download/${mediaId}`;
 
   link.download = "event-photo.jpg";
 
