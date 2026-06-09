@@ -1,5 +1,6 @@
 require("dotenv").config();
 const http = require("http");
+const cors = require("cors");
 const app = require("./app");
 const { Server } = require("socket.io");
 const connectDB = require("./config/db"); 
@@ -9,9 +10,20 @@ connectDB();
 const server = http.createServer(app);
 
 // SOCKET.IO INIT
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://connect-event-eight.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
