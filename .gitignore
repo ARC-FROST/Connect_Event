@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+BACKEND/node_modules/
+FRONTEND/node_modules/
+
+# Environment files
+.env
+BACKEND/.env
+FRONTEND/.env
+
+# Build files
+dist/
+build/
+.vite/
+
+# Mac
+.DS_Store
