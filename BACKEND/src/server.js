@@ -1,30 +1,28 @@
 require("dotenv").config();
 const http = require("http");
-const cors = require("cors");
 const app = require("./app");
 const { Server } = require("socket.io");
-const connectDB = require("./config/db"); 
+const connectDB = require("./config/db");
 
-connectDB();
+connectDB()
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => {
+    console.error("DB connection failed:", err);
+    process.exit(1);
+  });
 
 const server = http.createServer(app);
 
-// SOCKET.IO INIT
 const allowedOrigins = [
   "http://localhost:5173",
   "https://connect-event-eight.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
 });
 
@@ -34,12 +32,9 @@ io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("join-user", (userId) => {
-  socket.join(userId);
-
-  console.log(
-    `Socket ${socket.id} joined user room ${userId}`
-  );
-});
+    socket.join(userId);
+    console.log(`Socket ${socket.id} joined user room ${userId}`);
+  });
 
   socket.on("join-event", (eventId) => {
     socket.join(eventId);
@@ -50,9 +45,8 @@ io.on("connection", (socket) => {
   });
 });
 
-// START SERVER
 const PORT = process.env.PORT || 2001;
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
