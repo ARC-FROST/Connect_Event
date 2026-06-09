@@ -14,7 +14,7 @@ function Navbar() {
     <nav className="navbar">
 
       {/* LOGO */}
-      <h2 className="logo">EventApp</h2>
+      <h2 className="logo">ConnectEvent</h2>
 
       {/* SEARCH */}
       <div className="nav-search">
