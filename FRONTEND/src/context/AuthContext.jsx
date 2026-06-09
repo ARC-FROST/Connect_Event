@@ -5,9 +5,10 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("user"); 
+    const storedUser = sessionStorage.getItem("user");
 
     if (storedUser) {
       const userData = JSON.parse(storedUser);
@@ -18,15 +19,13 @@ export function AuthProvider({ children }) {
         socket.emit("join-user", userData._id);
       }
     }
+
+    setLoading(false);
   }, []);
 
-  
-  // LOGIN
   const login = (userData, token) => {
-    localStorage.setItem("token", token); 
-
-    sessionStorage.setItem("user", JSON.stringify(userData)); 
-
+    localStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
 
     if (!socket.connected) {
@@ -36,13 +35,9 @@ export function AuthProvider({ children }) {
     socket.emit("join-user", userData._id);
   };
 
-
-  // LOGOUT
   const logout = () => {
     localStorage.removeItem("token");
-
     sessionStorage.removeItem("user");
-
     setUser(null);
 
     if (socket.connected) {
@@ -57,6 +52,7 @@ export function AuthProvider({ children }) {
         login,
         logout,
         isAuthenticated: !!user,
+        loading,
       }}
     >
       {children}
